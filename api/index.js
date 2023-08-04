@@ -326,4 +326,4 @@ bot.on("message:text", async (ctx) => {
   }
 });
 
-webhookCallback(bot, "http");
+export default webhookCallback(bot, "http");
