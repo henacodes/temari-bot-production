@@ -11,6 +11,7 @@ import {
   subjects,
   materialTypesKeyboard,
   types,
+  resetState,
 } from "./utils/constants.js";
 import {
   postQuestion,
@@ -67,6 +68,10 @@ bot.command("ask", (ctx) => {
   ctx.session.task = "ask";
 });
 
+bot.command("reset_state", (ctx) => {
+  resetState(ctx);
+  ctx.reply("Your state was restored");
+});
 bot.on(":document", async (ctx) => {
   const { task, materialName, materialCategory, materialType } = ctx.session;
   if (task == "postMaterial") {
