@@ -60,6 +60,7 @@ bot.command("start", async (ctx) => {
     fetchAnswers(ctx, params.messageId);
   } else {
     ctx.reply("Welcome back sir. \nHow can help you today?");
+    console.log(ctx.session);
   }
 });
 
@@ -587,4 +588,18 @@ bot.on("message:text", async (ctx) => {
   }
 });
 
-export default webhookCallback(bot, "http");
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === "production") {
+  // Use Webhooks for the production server
+  const app = express();
+  app.use(express.json());
+  app.use(webhookCallback(bot, "express"));
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Bot listening on port ${PORT}`);
+  });
+} else {
+  // Use Long Polling for development
+  bot.start();
+}
