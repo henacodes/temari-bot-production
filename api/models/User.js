@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema({
       ref: "Material",
     },
   ],
-
   grade: {
     type: Number,
     required: true,

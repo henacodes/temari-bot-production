@@ -27,12 +27,20 @@ export const postAnswer = async (ctx) => {
 
 export const fetchAnswers = async (ctx, messageId) => {
   const question = await Question.findOne({ tgId: messageId });
-  const answers = await Answer.find({ question: question.id });
-
+  const answers = await Answer.find({ question: question.id }).populate(
+    "answeredBy"
+  );
   await ctx.reply(` #${question.category} \n\n\n ${question.text} `);
   if (answers.length > 0) {
     answers.map((a) => {
-      ctx.reply(a.text);
+      ctx.reply(
+        `By:${
+          a.isAnonymous
+            ? "Anonymous user"
+            : `<a href='tg://user?id=${a.answeredBy.tgId} ' >${a.answeredBy.firstName}</a>`
+        } \n\n\n${a.text}`,
+        { parse_mode: "HTML" }
+      );
     });
   } else {
     ctx.reply("Sorry, There is no anwer posted to this question");

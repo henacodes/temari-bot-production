@@ -30,13 +30,13 @@ export const confirmPostMessage = (ctx) => {
       inline_keyboard: [
         [
           {
-            text: "Confirm Post",
+            text: "Confirm Post ✅",
             callback_data: "confirm_post",
           },
         ],
         [
           {
-            text: "Cancel Post",
+            text: "Cancel Post🚫",
             callback_data: "cancel_post",
           },
         ],

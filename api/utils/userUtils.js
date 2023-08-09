@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import { channelID } from "./constants.js";
+import { adminId, channelID } from "./constants.js";
 export const createUser = async (ctx, user) => {
   const newUser = new User({
     tgId: user.id,
@@ -12,9 +12,8 @@ export const createUser = async (ctx, user) => {
 
   try {
     const saved = await newUser.save({ wtimeout: 15000 });
-    console.log(" db Id ", newUser.id);
     ctx.session.dbId = newUser.id;
-    ctx.session.task = null;
+
     ctx.reply(
       "You have been registered succesfully✨✨✨ \nNow you can use our bot for free!! \nEnjoy and Learn Together⚡️⚡️"
     );
@@ -44,9 +43,11 @@ export const authUserMiddleware = async (ctx, next) => {
 
 export const isMember = async (ctx, next) => {
   const channel = await ctx.api.getChat(channelID);
-
+  if (ctx.chat.id == adminId) {
+    ctx.session.userRole = "admin";
+  }
   const member = await ctx.api.getChatMember(channel.id, ctx.chat.id);
-  const { status } = member;
+  const { status } = await member;
   if (status == "member" || status == "creator" || status == "administrator") {
     next();
   } else {
